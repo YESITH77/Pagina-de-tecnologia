@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechTrend - Tienda de Tecnología</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #0a0a23;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #1f1f3b;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00ffcc;
+        }
+
+        .user-balance {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #00ffcc;
+            margin-right: 1rem;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        nav a {
+            color: #00ffcc;
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            color: #fff;
+            background: rgba(0, 255, 204, 0.2);
+        }
+
+        nav a.active {
+            background: rgba(0, 255, 204, 0.4);
+            color: #fff;
+        }
+
+        .hero {
+            background: linear-gradient(90deg, #0a0a23, #1f1f3b);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            color: #00ffcc;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            color: #ccc;
+            font-size: 1.2rem;
+        }
+
+        .section {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(31, 31, 59, 0.8);
+            border-radius: 15px;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #00ffcc;
+            border-bottom: 2px solid #00ffcc;
+            display: inline-block;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background: #2a2a4d;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .product-info h3 {
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+            color: #fff;
+        }
+
+        .product-info p {
+            color: #ccc;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-info button {
+            background: #00ffcc;
+            color: #0a0a23;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .product-info button:hover {
+            background: #00ccaa;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #444;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-total {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: right;
+            margin-top: 1rem;
+        }
+
+        .cart-empty {
+            text-align: center;
+            color: #ccc;
+            font-size: 1rem;
+        }
+
+        .cart-actions button {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-left: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .cart-actions .buy-now {
+            background: #00ffcc;
+            color: #0a0a23;
+        }
+
+        .cart-actions button:hover {
+            background: #cc3333;
+        }
+
+        .cart-actions .buy-now:hover {
+            background: #00ccaa;
+        }
+
+        .contact-form, .profile-form, .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 1rem 0;
+        }
+
+        .contact-form input,
+        .contact-form textarea,
+        .profile-form input,
+        .login-form input {
+            padding: 0.8rem;
+            border: none;
+            border-radius: 5px;
+            background: #3a3a6d;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .contact-form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .contact-form button, .profile-form button, .login-form button {
+            background: #00ffcc;
+            color: #0a0a23;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            align-self: flex-start;
+        }
+
+        .contact-form button:hover, .profile-form button:hover, .login-form button:hover {
+            background: #00ccaa;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #1f1f3b;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav {
+                flex-direction: column;
+                margin-top: 1rem;
+            }
+
+            nav a {
+                margin: 0.5rem 0;
+                display: block;
+            }
+
+            .user-balance {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>TechTrend</h1>
+        <div class="user-balance" id="user-balance">Saldo: $0.00</div>
+        <nav>
+            <a href="#home" class="nav-link active" data-section="home">Inicio</a>
+            <a href="#products" class="nav-link" data-section="products">Productos</a>
+            <a href="#gaming" class="nav-link" data-section="gaming">Accesorios Gamer</a>
+            <a href="#smart-home" class="nav-link" data-section="smart-home">Dispositivos Inteligentes</a>
+            <a href="#photography" class="nav-link" data-section="photography">Equipo de Fotografía</a>
+            <a href="#cart" class="nav-link" data-section="cart">Carrito</a>
+            <a href="#profile" class="nav-link" data-section="profile">Mi Perfil</a>
+            <a href="#login" class="nav-link" data-section="login">Iniciar Sesión</a>
+            <a href="#contact" class="nav-link" data-section="contact">Contacto</a>
+        </nav>
+    </header>
+
+    <section class="hero section active" id="home">
+        <div>
+            <h2>Descubre la Tecnología del Futuro</h2>
+            <p>Explora nuestra selección de productos innovadores y modernos.</p>
+        </div>
+    </section>
+
+    <section class="section" id="products">
+        <h2>Productos</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/97/46/7e/97467e2b86c10e9702d25fbfcebb89ea.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Smartphone X12">
+                <div class="product-info">
+                    <h3>Redmagic 9 Pro 120hz Gaming</h3>
+                    <p>$799.00</p>
+                    <button onclick="addToCart('Redmagic 9 Pro 120hz Gaming', 799.00)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/56/fd/d3/56fdd37bce8371f8161b5ed5dbd5ac7a.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Laptop Pro 16">
+                <div class="product-info">
+                    <h3>Laptop ASUS ROG Strix Scar 18 (G834JY)</h3>
+                    <p>$2499.00</p>
+                    <button onclick="addToCart('Laptop ASUS ROG Strix Scar 18 (G834JY)', 2499.00)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/f2/2d/1d/f22d1d2593486372954e225b3ac4d436.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Auriculares Neo">
+                <div class="product-info">
+                    <h3>Auriculares Inalambricos</h3>
+                    <p>$129.00</p>
+                    <button onclick="addToCart('Auriculares Inalambricos', 129.00)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/01/53/ea/0153ea788db02b17763de3d177cc54f9.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Smartwatch 4">
+                <div class="product-info">
+                    <h3>Reloj inteligente ULTRA Watch X WS Serie 10 / 4 correas / Lanzamiento en 2025 / Monitor de salud / Seguimiento GPS NFC / 100 modos deportivos 49 mm - Wear Pro</h3>
+                    <p>$399.00</p>
+                    <button onclick="addToCart('Reloj inteligente ULTRA Watch X WS Serie 10 / 4 correas / Lanzamiento en 2025 / Monitor de salud / Seguimiento GPS NFC / 100 modos deportivos 49 mm - Wear Pro', 399.00)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/1f/03/ea/1f03eaa3881a9a66f890ed05d1e02138.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Tablet Ultra 10">
+                <div class="product-info">
+                    <h3>Tablet Samsung Galaxy Tab S9 Ultra, 14,6 pulgadas, Wi-Fi, 512 GB, 12 GB de RAM, Android, beige</h3>
+                    <p>$1199.00</p>
+                    <button onclick="addToCart('Tablet Samsung Galaxy Tab S9 Ultra, 14,6 pulgadas, Wi-Fi, 512 GB, 12 GB de RAM, Android, beige', 1199.00)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/c9/b9/6f/c9b96f6fd8580cbb693a9881cb237ef0.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Smart Speaker Echo">
+                <div class="product-info">
+                    <h3>Altavoz inteligente Alexia Echo Dot de 5.ª generación</h3>
+                    <p>$49.99</p>
+                    <button onclick="addToCart('Altavoz inteligente Alexia Echo Dot de 5.ª generación', 49.99)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/5f/47/71/5f47716bd51023f71387e9088238cc2b.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Action Camera Pro">
+                <div class="product-info">
+                    <h3>Cámara de acción profesional</h3>
+                    <p>$349.00</p>
+                    <button onclick="addToCart('Cámara de acción profesional', 349.00)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/ba/b4/d9/bab4d90debea9d675b0da79657296de6.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Wireless Mouse X">
+                <div class="product-info">
+                    <h3>Ratón inalámbrico X</h3>
+                    <p>$59.99</p>
+                    <button onclick="addToCart('Ratón inalámbrico X', 59.99)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/7d/39/39/7d3939a449d49568723455058462e0c3.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Gaming Keyboard RGB">
+                <div class="product-info">
+                    <h3>Teclado para juegos RGB</h3>
+                    <p>$149.99</p>
+                    <button onclick="addToCart('Teclado para juegos RGB', 149.99)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/e3/a2/a4/e3a2a4db0cef24881ade08fc3a405334.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Smart Home Hub">
+                <div class="product-info">
+                    <h3>Gafas inteligentes de realidad aumentada</h3>
+                    <p>$599.00</p>
+                    <button onclick="addToCart('Gafas inteligentes de realidad aumentada', 599.00)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/4a/6c/c2/4a6cc270f6b73cd299e55c58f26f32f1.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Portable SSD 1TB">
+                <div class="product-info">
+                    <h3>Disco duro externo SSD portátil de alta velocidad, 1TB</h3>
+                    <p>$129.99</p>
+                    <button onclick="addToCart('Disco duro externo SSD portátil de alta velocidad, 1TB', 129.99)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/f0/f5/bb/f0f5bbd2faff20e357080f13d24014ed.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="VR Headset Vision">
+                <div class="product-info">
+                    <h3>Lentes de realidad virtual</h3>
+                    <p>$499.00</p>
+                    <button onclick="addToCart('Lentes de realidad virtual', 499.00)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/e8/35/fa/e835fad987c45619d62894a423187788.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Wireless Charger Pad">
+                <div class="product-info">
+                    <h3>Almohadilla de carga inalámbrica</h3>
+                    <p>$29.99</p>
+                    <button onclick="addToCart('Almohadilla de carga inalámbrica', 29.99)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/1f/b7/f9/1fb7f9ee2233c4b0030a92b080f75e24.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Smart Light Bulb">
+                <div class="product-info">
+                    <h3>Bombilla inteligente</h3>
+                    <p>$19.99</p>
+                    <button onclick="addToCart('Bombilla inteligente', 19.99)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="gaming">
+        <h2>Accesorios Gamer</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/e2/31/b5/e231b5dc0a6f60ae7d598c4f4c0eb741.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Gaming Headset Ultra">
+                <div class="product-info">
+                    <h3>Auriculares para juegos ultra</h3>
+                    <p>$149.99</p>
+                    <button onclick="addToCart('Auriculares para juegos ultra', 149.99)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/06/ab/4a/06ab4a46a014e886d2dd7844948b1006.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="RGB Mouse Pad">
+                <div class="product-info">
+                    <h3>Alfombrilla de ratón RGB</h3>
+                    <p>$39.99</p>
+                    <button onclick="addToCart('Alfombrilla de ratón RGB', 39.99)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://www.alcarrito.com/media/catalog/product/c/o/control_xbox_2.jpg?width=400&height=400&canvas=400,400&optimize=medium&bg-color=255,255,255&fit=bounds.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Gaming Controller Pro">
+                <div class="product-info">
+                    <h3>Control Xbox 360</h3>
+                    <p>$59.99</p>
+                    <button onclick="addToCart('Control Xbox 360', 59.99)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="smart-home">
+        <h2>Dispositivos Inteligentes</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/36/94/a2/3694a2b5ad5623191c2470bd551ce797.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Smart Thermostat">
+                <div class="product-info">
+                    <h3>Termostato inteligente</h3>
+                    <p>$249.99</p>
+                    <button onclick="addToCart('Termostato inteligente', 249.99)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/2f/89/53/2f89530cbdb9f40744f9889c245cee87.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Smart Security Camera">
+                <div class="product-info">
+                    <h3>Cámara de seguridad inteligente</h3>
+                    <p>$99.99</p>
+                    <button onclick="addToCart('Cámara de seguridad inteligente', 99.99)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/bd/47/4e/bd474e87c7e8d6371eae66c7e9aa1b7a.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Smart Doorbell">
+                <div class="product-info">
+                    <h3>Timbre inteligente</h3>
+                    <p>$179.99</p>
+                    <button onclick="addToCart('Timbre inteligente', 179.99)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="photography">
+        <h2>Equipo de Fotografía</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/7b/37/a7/7b37a709686d9429f1fc18ebeb3e8799.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="DSLR Camera X">
+                <div class="product-info">
+                    <h3>Cámara DSLR X</h3>
+                    <p>$1299.00</p>
+                    <button onclick="addToCart('Cámara DSLR X', 1299.00)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/7d/5b/bf/7d5bbf1f591a0be859c22fb8157d9779.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Tripod Pro">
+                <div class="product-info">
+                    <h3>Trípode profesional</h3>
+                    <p>$99.99</p>
+                    <button onclick="addToCart('Trípode profesional', 99.99)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://i.pinimg.com/736x/f9/7a/22/f97a222005dd69a96a558e387f548d45.jpg" 
+                     onerror="this.src='https://via.placeholder.com/300x220?text=Imagen+No+Disponible'" 
+                     alt="Camera Lens 50mm">
+                <div class="product-info">
+                    <h3>Camera Lens 70mm</h3>
+                    <p>$499.00</p>
+                    <button onclick="addToCart('Camera Lens 70mm', 499.00)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="cart">
+        <h2>Carrito de Compras</h2>
+        <div id="cart-items"></div>
+        <div class="cart-total" id="cart-total">Total: $0.00</div>
+        <div class="cart-actions" id="cart-actions">
+            <button onclick="clearCart()">Vaciar Carrito</button>
+            <button class="buy-now" id="buy-now" style="display: none;" onclick="buyNow()">Comprar Ahora</button>
+        </div>
+    </section>
+
+    <section class="section" id="profile">
+        <h2>Mi Perfil</h2>
+        <p>Administra tu información personal y preferencias.</p>
+        <div class="profile-form">
+            <input type="text" id="profile-name" placeholder="Nombre" required>
+            <input type="email" id="profile-email" placeholder="Correo Electrónico" required>
+            <input type="text" id="profile-address" placeholder="Dirección" required>
+            <button onclick="saveProfile()">Guardar Cambios</button>
+        </div>
+    </section>
+
+    <section class="section" id="login">
+        <h2>Iniciar Sesión</h2>
+        <p>Ingresa tus credenciales para acceder a tu cuenta.</p>
+        <div class="login-form">
+            <input type="email" id="login-email" placeholder="Correo Electrónico" required>
+            <input type="password" id="login-password" placeholder="Contraseña" required>
+            <button onclick="handleLogin()">Entrar</button>
+        </div>
+    </section>
+
+    <section class="section" id="contact">
+        <h2>Contáctanos</h2>
+        <p>¿Tienes alguna pregunta o necesitas soporte? ¡Escríbenos!</p>
+        <div class="contact-form">
+            <input type="text" id="name" placeholder="Nombre" required>
+            <input type="email" id="email" placeholder="Correo Electrónico" required>
+            <textarea id="message" placeholder="Mensaje" required></textarea>
+            <button onclick="handleContact()">Enviar</button>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 TechTrend. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let profile = JSON.parse(localStorage.getItem('profile')) || {
+            name: '',
+            email: '',
+            address: ''
+        };
+        let userBalance = parseFloat(localStorage.getItem('userBalance')) || 5000; // Saldo inicial de $5000
+
+        // Actualizar el saldo visible en el header
+        function updateBalanceDisplay() {
+            const balanceElement = document.getElementById('user-balance');
+            balanceElement.textContent = `Saldo: $${userBalance.toFixed(2)}`;
+        }
+
+        // Mostrar solo la sección seleccionada
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            const targetLink = document.querySelector(`.nav-link[data-section="${sectionId}"]`);
+            if (targetLink) {
+                targetLink.classList.add('active');
+            }
+
+            // Actualizar carrito o perfil si es necesario
+            if (sectionId === 'cart') {
+                updateCart();
+            } else if (sectionId === 'profile') {
+                loadProfile();
+            }
+        }
+
+        // Manejar clics en los enlaces de navegación
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const sectionId = link.getAttribute('data-section');
+                showSection(sectionId);
+            });
+        });
+
+        // Mostrar la sección "Inicio" por defecto al cargar la página
+        window.addEventListener('load', () => {
+            showSection('home');
+            updateBalanceDisplay(); // Mostrar el saldo inicial
+        });
+
+        // Funciones del carrito
+        function addToCart(productName, price) {
+            cart.push({ name: productName, price: price });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCart();
+        }
+
+        function clearCart() {
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCart();
+        }
+
+        function buyNow() {
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+            if (total > userBalance) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Saldo Insuficiente',
+                    text: `No tienes suficiente saldo para realizar esta compra. Necesitas $${total.toFixed(2)}, pero tu saldo es de $${userBalance.toFixed(2)}.`,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#00ffcc'
+                });
+                return;
+            }
+
+            // Deducir el saldo
+            userBalance -= total;
+            localStorage.setItem('userBalance', userBalance);
+            updateBalanceDisplay();
+
+            // Mostrar alerta de SweetAlert
+            Swal.fire({
+                icon: 'success',
+                title: '¡Compra Exitosa!',
+                text: `Has realizado tu compra por un total de $${total.toFixed(2)}. Tu nuevo saldo es $${userBalance.toFixed(2)}.`,
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#00ffcc'
+            });
+
+            // Vaciar el carrito después de la compra
+            clearCart();
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            const buyNowButton = document.getElementById('buy-now');
+            cartItems.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="cart-empty">El carrito está vacío.</p>';
+                buyNowButton.style.display = 'none';
+            } else {
+                cart.forEach((item, index) => {
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'cart-item';
+                    cartItem.innerHTML = `
+                        <span>${item.name} - $${item.price.toFixed(2)}</span>
+                        <button onclick="removeFromCart(${index})">Eliminar</button>
+                    `;
+                    cartItems.appendChild(cartItem);
+                });
+                buyNowButton.style.display = 'inline-block';
+            }
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            cartTotal.textContent = `Total: $${total.toFixed(2)}`;
+        }
+
+        // Funciones del perfil
+        function saveProfile() {
+            const name = document.getElementById('profile-name').value.trim();
+            const email = document.getElementById('profile-email').value.trim();
+            const address = document.getElementById('profile-address').value.trim();
+
+            if (!name || !email || !address) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Campos Incompletos',
+                    text: 'Por favor, completa todos los campos.',
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#00ffcc'
+                });
+                return;
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Correo Inválido',
+                    text: 'Por favor, ingresa un correo electrónico válido.',
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#00ffcc'
+                });
+                return;
+            }
+
+            profile = { name, email, address };
+            localStorage.setItem('profile', JSON.stringify(profile));
+            Swal.fire({
+                icon: 'success',
+                title: '¡Perfil Guardado!',
+                text: 'Tu perfil ha sido guardado con éxito.',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#00ffcc'
+            });
+        }
+
+        function loadProfile() {
+            document.getElementById('profile-name').value = profile.name;
+            document.getElementById('profile-email').value = profile.email;
+            document.getElementById('profile-address').value = profile.address;
+        }
+
+        // Funciones de contacto
+        function handleContact() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            if (!name || !email || !message) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Campos Incompletos',
+                    text: 'Por favor, completa todos los campos.',
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#00ffcc'
+                });
+                return;
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Correo Inválido',
+                    text: 'Por favor, ingresa un correo electrónico válido.',
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#00ffcc'
+                });
+                return;
+            }
+
+            Swal.fire({
+                icon: 'success',
+                title: '¡Mensaje Enviado!',
+                text: 'Gracias por contactarnos. Te responderemos pronto.',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#00ffcc'
+            });
+            document.querySelector('.contact-form').reset();
+        }
+
+        // Función de login
+        function handleLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (!email || !password) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Campos Incompletos',
+                    text: 'Por favor, completa el correo electrónico y la contraseña.',
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#00ffcc'
+                });
+                return;
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Correo Inválido',
+                    text: 'Por favor, ingresa un correo electrónico válido.',
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#00ffcc'
+                });
+                return;
+            }
+
+            if (email === "test@example.com" && password === "123456") {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Inicio de Sesión Exitoso!',
+                    text: `Bienvenido(a), ${email}!`,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#00ffcc'
+                }).then(() => {
+                    showSection('home');
+                    document.querySelector('.login-form').reset();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Credenciales Incorrectas',
+                    text: 'El correo electrónico o la contraseña son incorrectos.',
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#00ffcc'
+                });
+            }
+        }
+    </script>
+</body>
+</html>
